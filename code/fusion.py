@@ -22,7 +22,7 @@ def get_data3():
 	return np.arange(60).reshape([3, 4, 5]).copy()
 
 def main(): #(image1,image2):
-	print("Hello")
+
 	indir="..\data\zipped_BIF6"
 	infname ="88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6.zip"
 	infile=os.path.join(indir,infname)
@@ -30,7 +30,7 @@ def main(): #(image1,image2):
 
 	# create cache object
 	if os.path.isfile("ImageCache.hdf5"):
-	  os.remove("ImageCache.hdf5")
+	  os.remove("ImageCache.hdf5") # remove if we had a previous cache object
 	hysp_cache=cache.HyperSpectralCache("ImageCache.hdf5")
 
 	# unzip file
@@ -39,10 +39,11 @@ def main(): #(image1,image2):
 	print("DataSetList",DataSetList)
 
 	# open the loaded BIF6 file and read the data
-	hysp_cache.enter_Data(DataSetList[0],'DATA',get_data3())
-	#hysp_cache.create_EmptyArray(DataSetList[0],'IMAGE',(1024,1024,3))
-	a= hysp_cache.get_Data(DataSetList[0],'DATA')
-	print(a.shape)
+	spectra, imgindex, y, x = hysp_cache.get_UnfoldedData(DataSetList[0],'IMAGE')		
+
+	print(spectra)
+	print(spectra.shape)
+
 	#f = open("88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6",'rb')
 	#hysp_cache.load_BIF6_file(filename)
 
