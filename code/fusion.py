@@ -1,6 +1,6 @@
 #
 # This is the shell code for the image fusion program
-# 
+#
 import os, sys
 import ReadBIF6 as read
 import cache
@@ -24,13 +24,13 @@ def get_data3():
 def main(): #(image1,image2):
 
 	indir="..\data\zipped_BIF6"
-	infname ="88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6.zip"
-	infile=os.path.join(indir,infname)
+	infile ="88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6.zip"
+	#infile=os.path.join(indir,infname)
 	print(infile)
 
 	# create cache object
 	if os.path.isfile("ImageCache.hdf5"):
-	  os.remove("ImageCache.hdf5") # remove if we had a previous cache object
+		os.remove("ImageCache.hdf5") # remove if we had a previous cache object
 	hysp_cache=cache.HyperSpectralCache("ImageCache.hdf5")
 
 	# unzip file
@@ -38,11 +38,20 @@ def main(): #(image1,image2):
 	DataSetList = hysp_cache.get_ListOfDataSets()
 	print("DataSetList",DataSetList)
 
+	RecordNames = hysp_cache.get_RecordNames(DataSetList[0])
+	print('RecordNames', RecordNames)
+	Tmpstr = '/' + DataSetList[0]
+	print(Tmpstr)
+
 	# open the loaded BIF6 file and read the data
-	spectra, imgindex, y, x = hysp_cache.get_UnfoldedData(DataSetList[0],'IMAGE')		
+	spectra, imgindex, y, x = hysp_cache.get_UnfoldedData(DataSetList[0],'IMAGE')
 
 	print(spectra)
 	print(spectra.shape)
+	print(imgindex)
+	print(y)
+	print(x)
+
 
 	#f = open("88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6",'rb')
 	#hysp_cache.load_BIF6_file(filename)
@@ -55,7 +64,7 @@ def main(): #(image1,image2):
 		#bif6img = read.Read_Image(filename, img_x, img_y)
 
 
-	
+
 
 
 
