@@ -10,10 +10,10 @@ Ibar=mean(I);
 sum=0;
 for i=1:N
 	for j=1:M
-		sum=I(i,j)-Ibar;
+		sum+=(I(i,j)/Ibar-1)^2;
 	end
 end
-result=abs(sum/Ibar);
+result=sqrt(sum);
 
 disp(result);
 end
