@@ -1,7 +1,8 @@
-function f=imcontrast(I)
+%function f=imcontrast(I)
 
 % root mean square contrast
 
+I=posimage;
 N=size(I,1);
 M=size(I,2);
 
@@ -13,10 +14,11 @@ for i=1:N
 		sum=sum+(I(i,j)/Ibar-1)^2;
 	end
 end
-disp(sum)
+sum=sum/(N*M);
+disp(sum);
 result=sqrt(sum);
 
 disp(result);
-end
+%end
 
 
