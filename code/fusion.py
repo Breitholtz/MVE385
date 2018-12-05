@@ -3,6 +3,20 @@ import ReadBIF6 as read
 import hyperspectral_cache as cache
 import numpy as np
 
+def image_contrast(image):
+    N=image.shape[0]
+    M=image.shape[1]
+    Ibar=image.mean()
+    Sum=0
+    for i in range(0,N):
+        for j in range(0,M):
+            Sum+=np.power(image[i][j]/Ibar-1,2)
+    Sum=Sum/(N*M)
+    Result=np.sqrt(Sum)
+    print(Result)
+    return Result
+            
+
 def fuse_Spectra(spec_Neg,spec_Pos):
 	spectra = []
 	spectra.append(np.maximum(spec_Pos[0],spec_Neg[0])) #note remove first spectra for only overlapping spectras
