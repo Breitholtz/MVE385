@@ -1,0 +1,3 @@
+[console_scripts]
+ImagePipeline_II = ImagePipeline_II.ImagePipeline_II:main
+

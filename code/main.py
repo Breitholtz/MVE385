@@ -53,7 +53,7 @@ def get_New_Concentration(X,fused_Spectra,map_i,map_p):
 			if pros < 1 and k>0:
 				conc[i][k-1]=conc[i][k-1]+x[i][j]*(1-pros)
 
-	return map_p
+	return conc
 
 def main():
 
@@ -88,8 +88,10 @@ def main():
 	spectra_p_Pos, spectra_i_Pos=get_map(VARID4p,spectra_Profile) # create new concentration by mapping from old spectra to fused spectra profile
 	spectra_p_Neg, spectre_i_Neg=get_map(VARID4n,spectra_Profile)
 
-	#Xneg=get_New_Concentration(Xn,spectra_Profile,spectra_p_Neg,spectre_i_Neg)
-	#Xpos=get_New_Concentration(Xp,spectra_Profile,spectra_p_Pos,spectre_i_Pos)
+	#
+	Xneg=get_New_Concentration(Xn,spectra_Profile,spectra_p_Neg,spectre_i_Neg)
+	Xpos=get_New_Concentration(Xp,spectra_Profile,spectra_p_Pos,spectre_i_Pos)
+	print(Xneg)
 
 
 if  __name__ =='__main__':
