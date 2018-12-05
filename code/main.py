@@ -3,9 +3,10 @@ import ReadBIF6 as read
 import hyperspectral_cache as cache
 import numpy as np
 
+#fuse negative and postive spectras to one spectra profile
 def fuse_Spectra_Profile(spec_Neg,spec_Pos):
 	spectra = []
-	spectra.append(np.maximum(spec_Pos[0],spec_Neg[0])) #note remove first spectra for only overlapping spectras
+	spectra.append(np.maximum(spec_Pos[0],spec_Neg[0]))
 	j=1
 	i=1
 	k=0
@@ -19,6 +20,7 @@ def fuse_Spectra_Profile(spec_Neg,spec_Pos):
 			k=k+1;
 	return spectra
 
+#get map from spectra to fused spectra
 def get_map(spectra,fused_Spectra):
 	k=1;
 	i=1;
@@ -37,8 +39,9 @@ def get_map(spectra,fused_Spectra):
 			i=i+1
 		else:
 			k=k+1
-	return map_p, map_i
+	return map_p, map_i #return index and procentage mapped
 
+#get new concentration in fused spectra
 def get_New_Concentration(X,fused_Spectra,map_i,map_p):
 	con=np.zeros(X.size,len(fused_Spectra))
 
@@ -77,7 +80,7 @@ def main():
 
 	Tmpstrn = '/' + DataSetListn[0]
 	Tmpstrp = '/' + DataSetListp[0]
-	VARID4n = hysp_cachen.cache_file_handle[Tmpstrn]['VARID4'] # get max spectra
+	VARID4n = hysp_cachen.cache_file_handle[Tmpstrn]['VARID4'] # get max spectra profile
 	VARID4p = hysp_cachep.cache_file_handle[Tmpstrp]['VARID4']
 
 	spectra_Profile=fuse_Spectra_Profile(VARID4n,VARID4p) #fuse spectras to an overlapping spectra profile
@@ -85,8 +88,8 @@ def main():
 	spectra_p_Pos, spectra_i_Pos=get_map(VARID4p,spectra_Profile) # create new concentration by mapping from old spectra to fused spectra profile
 	spectra_p_Neg, spectre_i_Neg=get_map(VARID4n,spectra_Profile)
 
-	Xneg=get_New_Concentration(Xn,spectra_Profile,spectra_p_Neg,spectre_i_Neg)
-	Xpos=get_New_Concentration(Xp,spectra_Profile,spectra_p_Pos,spectre_i_Pos)
+	#Xneg=get_New_Concentration(Xn,spectra_Profile,spectra_p_Neg,spectre_i_Neg)
+	#Xpos=get_New_Concentration(Xp,spectra_Profile,spectra_p_Pos,spectre_i_Pos)
 
 
 if  __name__ =='__main__':
