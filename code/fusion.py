@@ -2,7 +2,7 @@ import os, sys
 import ReadBIF6 as read
 import hyperspectral_cache as cache
 import numpy as np
-
+import imageio
 def image_contrast(image):
     N=image.shape[0]
     M=image.shape[1]
@@ -13,24 +13,22 @@ def image_contrast(image):
             Sum+=np.power(image[i][j]/Ibar-1,2)
     Sum=Sum/(N*M)
     Result=np.sqrt(Sum)
-    print(Result)
     return Result
 
 def image_quality(image):
     scale=100 # scale factor
     N=image.shape[0]
     M=image.shape[0]
-    t_h=0 #
+    t_h=0 # amount of high freq 'components'
     F=np.fft.fft2(image)
-    Fcenter=np.fft.fftshift(F)
-           
-    Max=(np.abs(Fcenter).max)
+    Fcenter=np.fft.fftshift(F)          
+    MAX=np.max(np.absolute(Fcenter))
+
     for i in range(0,N):
         for j in range(0,M):
-            if np.abs(Fcenter[i][j]>Max/scale):
+            if np.abs(Fcenter[i][j]>MAX/scale):
                 t_h+=1
     Result= t_h/(N*M)
-    print(Result)
     return Result
 
 def fuse_Spectra(spec_Neg,spec_Pos):
@@ -67,8 +65,12 @@ def get_New_Spectra(spectra,fused_Spectra):
 			k=k+1
 	return map_p
 
-def main():
-
+def main():        
+	im=imageio.imread('peppers256.png')
+	quality=image_quality(im)
+	print(quality)
+	contrast=image_contrast(im)
+	print(contrast)
 	infilen ="88Lac10BUD2MgStChalmersBi1HiMassn1_1.BIF6.zip" #spectra files
 	infilep ="88Lac10BUD2MgStChalmersBi1HiMassp1_1.BIF6.zip"
 	# create cache object
