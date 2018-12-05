@@ -15,7 +15,23 @@ def image_contrast(image):
     Result=np.sqrt(Sum)
     print(Result)
     return Result
-            
+
+def image_quality(image):
+    scale=100 # scale factor
+    N=image.shape[0]
+    M=image.shape[0]
+    t_h=0 #
+    F=np.fft.fft2(image)
+    Fcenter=np.fft.fftshift(F)
+           
+    Max=(np.abs(Fcenter).max)
+    for i in range(0,N):
+        for j in range(0,M):
+            if np.abs(Fcenter[i][j]>Max/scale):
+                t_h+=1
+    Result= t_h/(N*M)
+    print(Result)
+    return Result
 
 def fuse_Spectra(spec_Neg,spec_Pos):
 	spectra = []
