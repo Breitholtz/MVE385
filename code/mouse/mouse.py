@@ -16,18 +16,35 @@ def compare_points(image,points,chosen_point):
 		dist.append((points[i][0]-chosen_point[0][0])**2+(points[i][1]-chosen_point[0][1])**2)
 	print("Distances calculated:")
 	print(dist)
+	print("Points that we test:")
+	print(points)
 	# choose the point closest and translate the image
 	# this so that the image will line up with the one it is compared to 
 	a=[x for _,x in sorted(zip(dist,points))]
-	delta_x=a[0][0]
-	delta_y=a[0][1]
+	delta_x=np.abs(a[0][0]-chosen_point[0][0])
+	delta_y=np.abs(a[0][1]-chosen_point[0][1])
+	print("delta x")
+	print(delta_x)
+	print("delta y")
+	print(delta_y)
 	num_rows, num_cols = image.shape[:2]
+	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	translation_matrix = np.float32([ [1,0,delta_x], [0,1,delta_y] ])
 	image_translation = cv2.warpAffine(image, translation_matrix, (num_cols, num_rows))
 	cv2.imshow('Translation', image_translation)
+	gray_after = cv2.cvtColor(image_translation,cv2.COLOR_BGR2GRAY)
+
+	# count empty space to give a metric if any image needs to be redone
+	print("--------")
+	num_pixels=num_rows*num_cols
+	num_black_before=cv2.countNonZero(gray)
+	num_black_after=cv2.countNonZero(gray_after)
+	print("Percent of image that is nonzero:")
+	print((num_black_before-num_black_after)/num_pixels*100)
+	print("--------")
 
 
-# count empty space to give a metric if any image needs to be redone
+
 def choose_midpoint(event,x,y,flags, param):
 	global refPt, chosen, test_points
 
