@@ -7,6 +7,7 @@ import argparse
 import cv2
 import numpy as np
 refPt=[]
+first_point=[]
 chosen=False
 test_points= [ (125,100), (500,500),(25,25)]
 def compare_points(image,points,chosen_point):
@@ -16,7 +17,7 @@ def compare_points(image,points,chosen_point):
 		dist.append((points[i][0]-chosen_point[0][0])**2+(points[i][1]-chosen_point[0][1])**2)
 	print("Distances calculated:")
 	print(dist)
-	print("Points that we test:")
+	print("Point that was chosen in previous picture:")
 	print(points)
 	# choose the point closest and translate the image
 	# this so that the image will line up with the one it is compared to 
@@ -39,13 +40,13 @@ def compare_points(image,points,chosen_point):
 	num_pixels=num_rows*num_cols
 	num_black_before=cv2.countNonZero(gray)
 	num_black_after=cv2.countNonZero(gray_after)
-	print("Percent of image that is nonzero:")
+	print("Percent of image that is black:")
 	print((num_black_before-num_black_after)/num_pixels*100)
 	print("--------")
 
 
 
-def choose_midpoint(event,x,y,flags, param):
+def choose_second_point(event,x,y,flags, param):
 	global refPt, chosen, test_points
 
 # if we click the mouse we draw a circle around where we click
@@ -53,29 +54,67 @@ def choose_midpoint(event,x,y,flags, param):
 		refPt=[(x,y)]
 		chosen = True
 	elif event== cv2.EVENT_LBUTTONUP:
-		refPt.append((x,y))
 		chosen=False
 
-		compare_points(image,test_points,refPt)
-		cv2.circle(image, refPt[0],3,(255,255,255),1)
+		compare_points(image2,first_point,refPt)
+		cv2.circle(image2, refPt[0],3,(255,255,255),1)
+		cv2.imshow("image",image2)
+
+
+def choose_first_point(event,x,y,flags,param):
+	global refPt, chosen, first_point
+
+# if we click the mouse we draw a circle around where we click
+	if event == cv2.EVENT_LBUTTONDOWN:
+		first_point=[(x,y)]
+		chosen = True
+	elif event== cv2.EVENT_LBUTTONUP:
+		chosen=False
+		print(first_point)
+		cv2.circle(image, first_point[0],3,(255,255,255),1)
 		cv2.imshow("image",image)
 
+
+def output_data():
+	global refPt, first_point 
 # initialise argument parser
 
 ap=argparse.ArgumentParser()
-ap.add_argument("-i","--image",required=True, help="path to the image you want to use")
+ap.add_argument("-i1","--im1",required=True, help="path to the first image you want to use")
+ap.add_argument("-i2","--im2",required=True,help="path to the second image you want to use")
 args=vars(ap.parse_args())
 
-# load chosen image and setup mouse callback function
+# load chosen first image and setup mouse callback function
 
-image = cv2.imread(args["image"])
+image = cv2.imread(args["im1"])
 clone=image.copy()
-cv2.namedWindow("image")
-cv2.setMouseCallback("image",choose_midpoint)
+cv2.namedWindow("image1")
+cv2.setMouseCallback("image1",choose_first_point)
 
-# loop and wait for keypress
+# loop for first image and wait for keypress
+
+
 while True:
-	cv2.imshow("image",image)
+	cv2.imshow("image1",image)
+	key=cv2.waitKey(1) & 0xFF
+
+	# if r is pressed reset the point
+	if key == ord("r"):
+	 image= clone.copy()
+	# if c is pressed break from loop
+	if key == ord("c"):
+	 break
+
+cv2.destroyAllWindows()
+# load chosen second image and setup mouse callback function
+
+image2 = cv2.imread(args["im2"])
+clone=image.copy()
+cv2.namedWindow("image2")
+cv2.setMouseCallback("image2",choose_second_point)
+# loop for second image and wait for keypress
+while True:
+	cv2.imshow("image2",image2)
 	key=cv2.waitKey(1) & 0xFF
 
 	# if r is pressed reset the point
@@ -84,6 +123,8 @@ while True:
 
 	# if c is pressed break from loop
 	if key == ord("c"):
+	 output_data()
 	 break
+
 
 cv2.destroyAllWindows()
