@@ -1,6 +1,7 @@
+% This line is to run the setup needed for the VLFeat package. This can be avoided by adding it to the MATLAB environment in the startup.m file. This will permnently make it setup on startup and one needn't have it in the other m-files. 
 run('~/Documents/MATLAB/vlfeat/toolbox/vl_setup')
 
-%% Parse positive
+%% Parse positive image
 fid = fopen('88Lac10BUD2MgStChalmersHiSpatBi1p1_1.BIF6');
 filetype = fread(fid,[1 6],'uint8=>char');
 %\
