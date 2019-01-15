@@ -1,4 +1,4 @@
-function [fusedP, fusedN, transform] = SIFTfusion(im_p, im_n, steepness)
+function [fusedP, fusedN, transform] = SIFTfusion(im_p, im_n)
 % Positive projected onto negative
 
 im_max = max(max(im_p));
@@ -60,15 +60,8 @@ xdata = [min([transfbounds(:,1); 1]) max([transfbounds(:,1); size(imgB,2)])]; yd
 [newImgA] = imtransform(imgA,tform,'xdata',xdata,'ydata',ydata);
 tform2 = maketform('projective',eye(3));
 [newImgB] = imtransform(imgB,tform2,'xdata',xdata,'ydata',ydata,'size',size(newImgA)); %Creates a larger version of B
-% newAB = newImgB;
-% newAB = newImgA + newImgB;
-% newAB = newImgA.*(newImgB>0) + newImgB.*(newImgA>0);
+
 fusedP = newImgA.*(newImgB>0);
 fusedN = newImgB.*(newImgA>0);
-% newAB(newImgB < newImgA) = newImgA(newImgB < newImgA);
-%Writes both images in the new image. 
-%(A somewhat hacky solution is needed 
-%since pixels outside the valid image area are not allways zero...)
 
-% fusedIm = newAB;
 transform = bestH';
